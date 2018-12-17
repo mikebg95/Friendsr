@@ -15,26 +15,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     Friend retrievedFriend;
 
-    // when rated by user
-    private class OnRatingBarClickListener implements RatingBar.OnRatingBarChangeListener {
-        @Override
-        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-            // open sharedpreferences and save users rating for that friend
-            SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putFloat(retrievedFriend.getName(), rating);
-            editor.apply();
-
-            // set friends rating to that rating
-            retrievedFriend.setRating(rating);
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // get clicked friend from intent
         Intent intent = getIntent();
         retrievedFriend = (Friend) intent.getSerializableExtra("clicked_friend");
 
@@ -44,23 +30,37 @@ public class ProfileActivity extends AppCompatActivity {
         TextView bio = findViewById(R.id.bio);
         RatingBar ratingBar = findViewById(R.id.ratingBar);
 
-        // set image, name and bio of that friend
+        // set listener for rating bar
+        ratingBar.setOnRatingBarChangeListener(new OnRatingBarClickListener());
+
+        // set image, name and bio of clicked friend
         profilePic.setImageDrawable(getDrawable(retrievedFriend.getDrawableId()));
         profileName.setText(retrievedFriend.getName());
         bio.setText(retrievedFriend.getBio());
 
-
-//        SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
-        ratingBar.setOnRatingBarChangeListener(new OnRatingBarClickListener());
+        // get stored rating
         SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
-        Float aStoredFloat = prefs.getFloat(retrievedFriend.getName(),0.0f);
+        Float rating = prefs.getFloat(retrievedFriend.getName(),0.0f);
 
-        if (aStoredFloat != 0.0f) {
+        if (rating != 0.0f) {
             // show rating from prefs on rating bar
-            ratingBar.setRating(aStoredFloat);
+            ratingBar.setRating(rating);
         }
 
-//        ratingBar.setOnRatingBarChangeListener(new OnRatingBarClickListener());
+    }
 
+    // when rated by user
+    private class OnRatingBarClickListener implements RatingBar.OnRatingBarChangeListener {
+        @Override
+        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+            // save rating
+            SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putFloat(retrievedFriend.getName(), rating);
+            editor.apply();
+
+            // set friends rating to (new) rating
+            retrievedFriend.setRating(rating);
+        }
     }
 }

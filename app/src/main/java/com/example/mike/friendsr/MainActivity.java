@@ -18,17 +18,7 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    private class GridItemClickListener implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Friend clickedFriend = (Friend) parent.getItemAtPosition(position);
-
-            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-            intent.putExtra("clicked_friend", clickedFriend);
-            startActivity(intent);
-        }
-    }
-
+    // create arraylist to stash friend objects
     ArrayList<Friend> friends = new ArrayList<>();
 
     @Override
@@ -60,10 +50,25 @@ public class MainActivity extends AppCompatActivity {
         friends.add(sansa);
         friends.add(tyrion);
 
+        // create an adapter to and link list of friends to grid
         FriendsAdapter adapter = new FriendsAdapter(this, R.layout.grid_item, friends);
         GridView grid = findViewById(R.id.grid);
         grid.setAdapter(adapter);
 
         grid.setOnItemClickListener(new GridItemClickListener());
+    }
+
+    // when one of the friend profiles is clicked
+    private class GridItemClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // find out which friend was clicked
+            Friend clickedFriend = (Friend) parent.getItemAtPosition(position);
+
+            // add clicked friend to intent and go to profile activity
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            intent.putExtra("clicked_friend", clickedFriend);
+            startActivity(intent);
+        }
     }
 }

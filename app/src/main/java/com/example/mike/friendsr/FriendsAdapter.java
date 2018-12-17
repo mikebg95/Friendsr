@@ -16,10 +16,9 @@ import java.util.List;
 
 import static java.sql.DriverManager.println;
 
-
 public class FriendsAdapter extends ArrayAdapter<Friend> {
     // create (empty) arraylist to store friends
-    private ArrayList<Friend> friends = new ArrayList<>();
+    private ArrayList<Friend> friends;
 
     public FriendsAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Friend> friends) {
         super(context, resource, friends);
@@ -33,10 +32,11 @@ public class FriendsAdapter extends ArrayAdapter<Friend> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.grid_item, parent, false);
         }
 
+        // get variables for name and photo of friend
         TextView friendName = convertView.findViewById(R.id.friendName);
         ImageView friendPhoto = convertView.findViewById(R.id.friendPhoto);
 
-
+        // set name and photo for each friend
         friendName.setText(friends.get(position).getName());
         friendPhoto.setImageDrawable(getContext().getDrawable(friends.get(position).getDrawableId()));
 
