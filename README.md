@@ -1,6 +1,6 @@
 # Friendsr
 
-This app was made as part of the CS50 Web Track course.
+This app was made as part of the CS50 Android Track course.
 
 ### Content:
 App that allows you to scroll through list of friends (in this case Game of Thrones characters), each with a name and profile picture.
